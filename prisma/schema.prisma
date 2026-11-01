@@ -1,0 +1,36 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+enum UserRole {
+  ADMIN
+  USER
+}
+
+model User {
+  id       String   @id @default(cuid())
+  email    String   @unique
+  name     String?
+  password String
+  role     UserRole @default(USER)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+// One row = one item for sale
+model Product {
+  id          Int      @id @default(autoincrement())
+  name        String
+  slug        String   @unique // used in the page address, e.g. /products/ankara-wrap-dress
+  description String
+  price       Int // whole naira, e.g. 25000
+  category    String // "Outfits" or "Accessories"
+  imageUrl    String
+  inStock     Boolean  @default(true)
+  createdAt   DateTime @default(now())
+}
